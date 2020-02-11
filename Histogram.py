@@ -21,27 +21,17 @@ colnames=['Elevation', 'Aspect',
 
 data = pd.read_csv('covtype.csv', names = colnames)
 
-print(data.shape)
+columns = data.select_dtypes(include='number').columns
+rows, cols = choose_grid(3)
+plt.figure()
+fig, axs = plt.subplots(figsize=(cols*3, rows*1), squeeze=False)
+i, j = 0, 0
 
-print(data.dtypes)
-
-cat_vars = data.select_dtypes(include='object')
-for att in cat_vars:
-    print(att, data[att].unique())
-
-#data[cat_vars.columns] = data.select_dtypes(['object']).apply(lambda x: x.astype('category'))
-#data.dtypesdata[cat_vars.columns] = data.select_dtypes(['object']).apply(lambda x: x.astype('category'))
-
-fig = plt.figure(figsize=(10,7))
-mv = {}
-for var in data:
-    mv[var] = data[var].isna().sum()
-    bar_chart(plt.gca(), mv.keys(), mv.values(), 'Number of missing values per variable', var, 'nr. missing values')
+for n in range(3, 6):
+    axs[i, j].set_title('Histogram for %s'%columns[n])
+    axs[i, j].set_xlabel(columns[n])
+    axs[i, j].set_ylabel("Meters")
+    axs[i, j].hist(data[columns[n]].dropna().values, 'auto')
+    i, j = (i + 1, 0) if (n+1) % cols == 0 else (i, j + 1)
 fig.tight_layout()
 plt.show()
-
-data.describe(include = 'all')
-
-data.boxplot()
-plt.show()
-
