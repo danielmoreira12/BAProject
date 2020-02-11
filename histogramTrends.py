@@ -1,4 +1,6 @@
+import seaborn as sns
 from functions import *
+
 colnames = ['Elevation', 'Aspect', 'Slope',
                 'Horizontal_Distance_To_Hydrology', 'Vertical_Distance_To_Hydrology',
                 'Horizontal_Distance_To_Roadways', 'Hillshade_9am', 'Hillshade_Noon',
@@ -37,12 +39,10 @@ rows, cols = choose_grid(len(columns))
 plt.figure()
 fig, axs = plt.subplots(rows, cols, figsize=(cols*4, rows*4), squeeze=False)
 i, j = 0, 0
-
 for n in range(len(columns)):
-    axs[i, j].set_title('Histogram for %s'%columns[n])
-    axs[i, j].set_xlabel(columns[n])
-    axs[i, j].set_ylabel("0 to 255 index")
-    axs[i, j].hist(data[columns[n]].dropna().values, 'auto')
+    axs[i, j].set_title('Histogram with trend for %s'%columns[n])
+    axs[i, j].set_ylabel("probability")
+    sns.distplot(data[columns[n]].dropna().values, norm_hist=True, ax=axs[i, j], axlabel=columns[n])
     i, j = (i + 1, 0) if (n+1) % cols == 0 else (i, j + 1)
 fig.tight_layout()
 plt.show()
