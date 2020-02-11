@@ -1,3 +1,4 @@
+import scipy.stats as _stats
 from functions import *
 
 colnames = ['Elevation', 'Aspect', 'Slope',
@@ -33,48 +34,35 @@ data = data.astype({"Wilderness_Area 1": 'category', 'Wilderness_Area 2': 'categ
                     'Soil_Type 36': 'category', 'Soil_Type 37': 'category', 'Soil_Type 38': 'category',
                     'Soil_Type 39': 'category', 'Soil_Type 40': 'category'})
 
+def compute_known_distributions(x_values, n_bins) -> dict:
+    distributions = dict()
+    # Gaussian
+    mean, sigma = _stats.norm.fit(x_values)
+    distributions['Normal(%.1f,%.2f)'%(mean,sigma)] = _stats.norm.pdf(x_values, mean, sigma)
+    # LogNorm
+  #  sigma, loc, scale = _stats.lognorm.fit(x_values)
+  #  distributions['LogNor(%.1f,%.2f)'%(np.log(scale),sigma)] = _stats.lognorm.pdf(x_values, sigma, loc, scale)
+    # Exponential
+    loc, scale = _stats.expon.fit(x_values)
+    distributions['Exp(%.2f)'%(1/scale)] = _stats.expon.pdf(x_values, loc, scale)
+    # SkewNorm
+   # a, loc, scale = _stats.skewnorm.fit(x_values)
+   # distributions['SkewNorm(%.2f)'%a] = _stats.skewnorm.pdf(x_values, a, loc, scale)
+    return distributions
+
+def histogram_with_distributions(ax: plt.Axes, series: pd.Series, var: str):
+    values = series.sort_values().values
+    n, bins, patches = ax.hist(values, 20, density=True, edgecolor='grey')
+    distributions = compute_known_distributions(values, bins)
+    multiple_line_chart(ax, values, distributions, 'Best fit for %s'%var, var, 'probability')
+
 columns = data.select_dtypes(include='number').columns
 rows, cols = choose_grid(len(columns))
 plt.figure()
 fig, axs = plt.subplots(rows, cols, figsize=(cols*4, rows*4), squeeze=False)
 i, j = 0, 0
-
 for n in range(len(columns)):
-    axs[i, j].set_title('Boxplot for %s'%columns[n])
-    axs[i, j].boxplot(data[columns[n]].dropna().values)
+    histogram_with_distributions(axs[i, j], data[columns[n]].dropna(), columns[n])
     i, j = (i + 1, 0) if (n+1) % cols == 0 else (i, j + 1)
 fig.tight_layout()
 plt.show()
-"""
-for n in range(12, 24):
-    axs[i, j].set_title('Boxplot for %s'%columns[n])
-    axs[i, j].boxplot(data[columns[n]].dropna().values)
-    i, j = (i + 1, 0) if (n+1) % cols == 0 else (i, j + 1)
-fig.tight_layout()
-plt.show()"""
-
-"""for n in range(24, 36):
-    axs[i, j].set_title('Boxplot for %s'%columns[n])
-    axs[i, j].boxplot(data[columns[n]].dropna().values)
-    i, j = (i + 1, 0) if (n+1) % cols == 0 else (i, j + 1)
-fig.tight_layout()
-plt.show()"""
-
-"""for n in range(36, 48):
-    axs[i, j].set_title('Boxplot for %s'%columns[n])
-    axs[i, j].boxplot(data[columns[n]].dropna().values)
-    i, j = (i + 1, 0) if (n+1) % cols == 0 else (i, j + 1)
-fig.tight_layout()
-plt.show()
-"""
-"""columns = data.select_dtypes(include='number').columns
-rows, cols = choose_grid(1)
-plt.figure()
-fig, axs = plt.subplots(figsize=(cols*4, rows*4), squeeze=False)
-i, j = 0, 0
-
-axs[i, j].set_title('Boxplot for %s'%columns[54])
-axs[i, j].boxplot(data[columns[54]].dropna().values)
-i, j = (i + 1, 0) if (54+1) % cols == 0 else (i, j + 1)
-fig.tight_layout()
-plt.show()"""

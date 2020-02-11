@@ -1,3 +1,4 @@
+import scipy.stats as _stats
 from functions import *
 
 colnames = ['Elevation', 'Aspect', 'Slope',
@@ -15,6 +16,7 @@ colnames = ['Elevation', 'Aspect', 'Slope',
                 'Soil_Type 37', 'Soil_Type 38', 'Soil_Type 39', 'Soil_Type 40',
                 'Cover_Type']
 data = pd.read_csv('covtype.csv', names=colnames)
+
 data = data.astype({"Wilderness_Area 1": 'category', 'Wilderness_Area 2': 'category',
                     'Wilderness_Area 3': 'category', 'Wilderness_Area 4': 'category',
                     'Soil_Type 1': 'category', 'Soil_Type 2': 'category', 'Soil_Type 3': 'category',
@@ -34,47 +36,16 @@ data = data.astype({"Wilderness_Area 1": 'category', 'Wilderness_Area 2': 'categ
                     'Soil_Type 39': 'category', 'Soil_Type 40': 'category'})
 
 columns = data.select_dtypes(include='number').columns
-rows, cols = choose_grid(len(columns))
+rows = len(columns)
+cols = 5
 plt.figure()
 fig, axs = plt.subplots(rows, cols, figsize=(cols*4, rows*4), squeeze=False)
-i, j = 0, 0
-
-for n in range(len(columns)):
-    axs[i, j].set_title('Boxplot for %s'%columns[n])
-    axs[i, j].boxplot(data[columns[n]].dropna().values)
-    i, j = (i + 1, 0) if (n+1) % cols == 0 else (i, j + 1)
+bins = range(5, 100, 20)
+for i in range(len(columns)):
+    for j in range(len(bins)):
+        axs[i, j].set_title('Histogram for %s'%columns[i])
+        axs[i, j].set_xlabel(columns[i])
+        axs[i, j].set_ylabel("probability")
+        axs[i, j].hist(data[columns[i]].dropna().values, bins[j])
 fig.tight_layout()
 plt.show()
-"""
-for n in range(12, 24):
-    axs[i, j].set_title('Boxplot for %s'%columns[n])
-    axs[i, j].boxplot(data[columns[n]].dropna().values)
-    i, j = (i + 1, 0) if (n+1) % cols == 0 else (i, j + 1)
-fig.tight_layout()
-plt.show()"""
-
-"""for n in range(24, 36):
-    axs[i, j].set_title('Boxplot for %s'%columns[n])
-    axs[i, j].boxplot(data[columns[n]].dropna().values)
-    i, j = (i + 1, 0) if (n+1) % cols == 0 else (i, j + 1)
-fig.tight_layout()
-plt.show()"""
-
-"""for n in range(36, 48):
-    axs[i, j].set_title('Boxplot for %s'%columns[n])
-    axs[i, j].boxplot(data[columns[n]].dropna().values)
-    i, j = (i + 1, 0) if (n+1) % cols == 0 else (i, j + 1)
-fig.tight_layout()
-plt.show()
-"""
-"""columns = data.select_dtypes(include='number').columns
-rows, cols = choose_grid(1)
-plt.figure()
-fig, axs = plt.subplots(figsize=(cols*4, rows*4), squeeze=False)
-i, j = 0, 0
-
-axs[i, j].set_title('Boxplot for %s'%columns[54])
-axs[i, j].boxplot(data[columns[54]].dropna().values)
-i, j = (i + 1, 0) if (54+1) % cols == 0 else (i, j + 1)
-fig.tight_layout()
-plt.show()"""

@@ -33,48 +33,14 @@ data = data.astype({"Wilderness_Area 1": 'category', 'Wilderness_Area 2': 'categ
                     'Soil_Type 36': 'category', 'Soil_Type 37': 'category', 'Soil_Type 38': 'category',
                     'Soil_Type 39': 'category', 'Soil_Type 40': 'category'})
 
-columns = data.select_dtypes(include='number').columns
+columns = data.select_dtypes(include='category').columns
 rows, cols = choose_grid(len(columns))
 plt.figure()
 fig, axs = plt.subplots(rows, cols, figsize=(cols*4, rows*4), squeeze=False)
 i, j = 0, 0
-
 for n in range(len(columns)):
-    axs[i, j].set_title('Boxplot for %s'%columns[n])
-    axs[i, j].boxplot(data[columns[n]].dropna().values)
+    counts = data[columns[n]].dropna().value_counts(normalize=True)
+    bar_chart(axs[i, j], counts.index, counts.values, 'Histogram for %s'%columns[n], columns[n], 'presence')
     i, j = (i + 1, 0) if (n+1) % cols == 0 else (i, j + 1)
 fig.tight_layout()
 plt.show()
-"""
-for n in range(12, 24):
-    axs[i, j].set_title('Boxplot for %s'%columns[n])
-    axs[i, j].boxplot(data[columns[n]].dropna().values)
-    i, j = (i + 1, 0) if (n+1) % cols == 0 else (i, j + 1)
-fig.tight_layout()
-plt.show()"""
-
-"""for n in range(24, 36):
-    axs[i, j].set_title('Boxplot for %s'%columns[n])
-    axs[i, j].boxplot(data[columns[n]].dropna().values)
-    i, j = (i + 1, 0) if (n+1) % cols == 0 else (i, j + 1)
-fig.tight_layout()
-plt.show()"""
-
-"""for n in range(36, 48):
-    axs[i, j].set_title('Boxplot for %s'%columns[n])
-    axs[i, j].boxplot(data[columns[n]].dropna().values)
-    i, j = (i + 1, 0) if (n+1) % cols == 0 else (i, j + 1)
-fig.tight_layout()
-plt.show()
-"""
-"""columns = data.select_dtypes(include='number').columns
-rows, cols = choose_grid(1)
-plt.figure()
-fig, axs = plt.subplots(figsize=(cols*4, rows*4), squeeze=False)
-i, j = 0, 0
-
-axs[i, j].set_title('Boxplot for %s'%columns[54])
-axs[i, j].boxplot(data[columns[54]].dropna().values)
-i, j = (i + 1, 0) if (54+1) % cols == 0 else (i, j + 1)
-fig.tight_layout()
-plt.show()"""
