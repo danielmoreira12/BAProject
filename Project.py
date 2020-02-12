@@ -48,3 +48,73 @@ plt.show()"""
 data.boxplot()
 plt.show()
 """
+#---------------------HistogramForCategory----------------------------------------------------------------------------------
+columns = data.select_dtypes(include='category').columns
+rows, cols = choose_grid(len(columns))
+plt.figure()
+fig, axs = plt.subplots(rows, cols, figsize=(cols*4, rows*4), squeeze=False)
+i, j = 0, 0
+for n in range(len(columns)):
+    counts = data[columns[n]].dropna().value_counts(normalize=True)
+    bar_chart(axs[i, j], counts.index, counts.values, 'Histogram for %s'%columns[n], columns[n], 'presence')
+    i, j = (i + 1, 0) if (n+1) % cols == 0 else (i, j + 1)
+fig.tight_layout()
+plt.show()
+
+#---------------------Boxplot----------------------------------------------------------------------------------
+columns = data.select_dtypes(include='number').columns
+rows, cols = choose_grid(len(columns))
+plt.figure()
+fig, axs = plt.subplots(rows, cols, figsize=(cols*4, rows*4), squeeze=False)
+i, j = 0, 0
+
+for n in range(len(columns)):
+    axs[i, j].set_title('Boxplot for %s'%columns[n])
+    axs[i, j].boxplot(data[columns[n]].dropna().values)
+    i, j = (i + 1, 0) if (n+1) % cols == 0 else (i, j + 1)
+fig.tight_layout()
+plt.show()
+
+#---------------------BoxplotIndividual----------------------------------------------------------------------------
+columns = data.select_dtypes(include='number').columns
+rows, cols = choose_grid(len(columns))
+plt.figure()
+fig, axs = plt.subplots(rows, cols, figsize=(cols*4, rows*4), squeeze=False)
+i, j = 0, 0
+
+for n in range(len(columns)):
+    axs[i, j].set_title('Boxplot for %s'%columns[n])
+    axs[i, j].boxplot(data[columns[n]].dropna().values)
+    i, j = (i + 1, 0) if (n+1) % cols == 0 else (i, j + 1)
+fig.tight_layout()
+plt.show()
+
+#---------------------Histogram----------------------------------------------------------------------------------
+columns = data.select_dtypes(include='number').columns
+rows, cols = choose_grid(len(columns))
+plt.figure()
+fig, axs = plt.subplots(rows, cols, figsize=(cols*4, rows*4), squeeze=False)
+i, j = 0, 0
+
+for n in range(len(columns)):
+    axs[i, j].set_title('Histogram for %s'%columns[n])
+    axs[i, j].set_xlabel(columns[n])
+    axs[i, j].set_ylabel("0 to 255 index")
+    axs[i, j].hist(data[columns[n]].dropna().values, 'auto')
+    i, j = (i + 1, 0) if (n+1) % cols == 0 else (i, j + 1)
+fig.tight_layout()
+plt.show()
+
+#---------------------HistogramTrends-----------------------------------------------------------------------------
+columns = data.select_dtypes(include='number').columns
+rows, cols = choose_grid(len(columns))
+plt.figure()
+fig, axs = plt.subplots(rows, cols, figsize=(cols*4, rows*4), squeeze=False)
+i, j = 0, 0
+for n in range(len(columns)):
+    axs[i, j].set_title('Histogram with trend for %s'%columns[n])
+    axs[i, j].set_ylabel("probability")
+    sns.distplot(data[columns[n]].dropna().values, norm_hist=True, ax=axs[i, j], axlabel=columns[n])
+    i, j = (i + 1, 0) if (n+1) % cols == 0 else (i, j + 1)
+fig.tight_layout()
+plt.show()
