@@ -74,7 +74,8 @@ norm_data = df_nr.join(df_sb, how='right')
 norm_data.describe(include='all')
 
 #---------------------------------Variable Dummification--------------------------------------------------------
-"""from sklearn.preprocessing import OneHotEncoder
+#Deu erro! Memoria!
+from sklearn.preprocessing import OneHotEncoder
 
 
 def dummify(df, cols_to_dummify):
@@ -91,8 +92,7 @@ def dummify(df, cols_to_dummify):
 
 df = dummify(data, cols_sb.columns)
 df.describe(include='all')
-"""
-#Deu erro! Não sei porque ainda
+
 #---------------------------------Data balancing - part1------------------------------------------------------
 #Deu erro! Falta de memoria. Temos de ver o que a professora falou de tirar uma amostra dos dados
 unbal = pd.read_csv('covtype.csv', sep=',', decimal='.')
