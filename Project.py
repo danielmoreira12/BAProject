@@ -1,4 +1,5 @@
 from functions import *
+import seaborn as sns
 
 colnames = ['Elevation', 'Aspect', 'Slope',
                 'Horizontal_Distance_To_Hydrology', 'Vertical_Distance_To_Hydrology',
@@ -57,20 +58,6 @@ i, j = 0, 0
 for n in range(len(columns)):
     counts = data[columns[n]].dropna().value_counts(normalize=True)
     bar_chart(axs[i, j], counts.index, counts.values, 'Histogram for %s'%columns[n], columns[n], 'presence')
-    i, j = (i + 1, 0) if (n+1) % cols == 0 else (i, j + 1)
-fig.tight_layout()
-plt.show()
-
-#---------------------Boxplot----------------------------------------------------------------------------------
-columns = data.select_dtypes(include='number').columns
-rows, cols = choose_grid(len(columns))
-plt.figure()
-fig, axs = plt.subplots(rows, cols, figsize=(cols*4, rows*4), squeeze=False)
-i, j = 0, 0
-
-for n in range(len(columns)):
-    axs[i, j].set_title('Boxplot for %s'%columns[n])
-    axs[i, j].boxplot(data[columns[n]].dropna().values)
     i, j = (i + 1, 0) if (n+1) % cols == 0 else (i, j + 1)
 fig.tight_layout()
 plt.show()
