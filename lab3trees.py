@@ -1,4 +1,10 @@
 from functions import *
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+import sklearn.metrics as metrics
+from sklearn.tree import DecisionTreeClassifier
 
 colnames = ['Elevation', 'Aspect', 'Slope',
                 'Horizontal_Distance_To_Hydrology', 'Vertical_Distance_To_Hydrology',
@@ -33,15 +39,32 @@ data = data.astype({"Wilderness_Area 1": 'category', 'Wilderness_Area 2': 'categ
                     'Soil_Type 36': 'category', 'Soil_Type 37': 'category', 'Soil_Type 38': 'category',
                     'Soil_Type 39': 'category', 'Soil_Type 40': 'category'})
 
-#----------------------------------------------Training strategy---------------------------------------------------
-import numpy as np
-import pandas as pd
-from sklearn.model_selection import train_test_split
-
+#----------------------------------------------Decision Trees---------------------------------------------------
 y: np.ndarray = data.pop('Cover_Type').values
 X: np.ndarray = data.values
-labels: np.ndarray = pd.unique(y)
+labels = pd.unique(y)
 
 trnX, tstX, trnY, tstY = train_test_split(X, y, train_size=0.7, stratify=y)
 
-#----------------------------------------------Naive Bayes---------------------------------------------------------
+min_samples_leaf = [.05, .025, .01, .0075, .005, .0025, .001]
+max_depths = [5, 10, 25, 50]
+criteria = ['entropy', 'gini']
+
+plt.figure()
+fig, axs = plt.subplots(1, 2, figsize=(16, 4), squeeze=False)
+for k in range(len(criteria)):
+    f = criteria[k]
+    values = {}
+    for d in max_depths:
+        yvalues = []
+        for n in min_samples_leaf:
+            tree = DecisionTreeClassifier(min_samples_leaf=n, max_depth=d, criterion=f)
+            tree.fit(trnX, trnY)
+            prdY = tree.predict(tstX)
+            yvalues.append(metrics.accuracy_score(tstY, prdY))
+        values[d] = yvalues
+    multiple_line_chart(axs[0, k], min_samples_leaf, values, 'Decision Trees with %s criteria' % f,
+                             'nr estimators',
+                             'accuracy', percentage=True)
+
+plt.show()
