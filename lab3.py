@@ -1,14 +1,5 @@
 from functions import *
-import pandas as pd
-import numpy as np
-from pandas.plotting import register_matplotlib_converters
-from sklearn.impute import SimpleImputer
-from sklearn.preprocessing import Normalizer
-import matplotlib.pyplot as plt
-from sklearn.preprocessing import OneHotEncoder
-from imblearn.over_sampling import SMOTE, RandomOverSampler
 
-register_matplotlib_converters()
 colnames = ['Elevation', 'Aspect', 'Slope',
                 'Horizontal_Distance_To_Hydrology', 'Vertical_Distance_To_Hydrology',
                 'Horizontal_Distance_To_Roadways', 'Hillshade_9am', 'Hillshade_Noon',
@@ -23,8 +14,8 @@ colnames = ['Elevation', 'Aspect', 'Slope',
                 'Soil_Type 31', 'Soil_Type 32', 'Soil_Type 33', 'Soil_Type 34', 'Soil_Type 35', 'Soil_Type 36',
                 'Soil_Type 37', 'Soil_Type 38', 'Soil_Type 39', 'Soil_Type 40',
                 'Cover_Type']
-original = pd.read_csv('covtype.csv', names=colnames)
-original = original.astype({"Wilderness_Area 1": 'category', 'Wilderness_Area 2': 'category',
+data = pd.read_csv('covtype.csv', names=colnames)
+data = data.astype({"Wilderness_Area 1": 'category', 'Wilderness_Area 2': 'category',
                     'Wilderness_Area 3': 'category', 'Wilderness_Area 4': 'category',
                     'Soil_Type 1': 'category', 'Soil_Type 2': 'category', 'Soil_Type 3': 'category',
                     'Soil_Type 4': 'category', 'Soil_Type 5': 'category', 'Soil_Type 6': 'category',
@@ -42,54 +33,15 @@ original = original.astype({"Wilderness_Area 1": 'category', 'Wilderness_Area 2'
                     'Soil_Type 36': 'category', 'Soil_Type 37': 'category', 'Soil_Type 38': 'category',
                     'Soil_Type 39': 'category', 'Soil_Type 40': 'category'})
 
-sb_vars = original.select_dtypes(include='object')
-original[sb_vars.columns] = original.select_dtypes(['object']).apply(lambda x: x.astype('category'))
+#----------------------------------------------Training strategy---------------------------------------------------
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
 
-cols_nr = original.select_dtypes(include='number')
-cols_sb = original.select_dtypes(include='category')
+y: np.ndarray = data.pop('Cover_Type').values
+X: np.ndarray = data.values
+labels: np.ndarray = pd.unique(y)
 
-original.describe(include='all')
+trnX, tstX, trnY, tstY = train_test_split(X, y, train_size=0.7, stratify=y)
 
-#---------------------------------Missing Value Imputation - Part 1---------------------------------------------
-
-imp = SimpleImputer(strategy='constant', fill_value='NA', missing_values=np.nan, copy=True)
-imp.fit(original.values)
-mat = imp.transform(original.values)
-data = pd.DataFrame(mat, columns=original.columns)
-data.describe(include='all')
-
-#---------------------------------Missing Value Imputation - Parte 2------------------------------------------
-imp_nr = SimpleImputer(strategy='mean', missing_values=np.nan, copy=True)
-imp_sb = SimpleImputer(strategy='most_frequent', missing_values='', copy=True)
-df_nr = pd.DataFrame(imp_nr.fit_transform(cols_nr), columns=cols_nr.columns)
-df_sb = pd.DataFrame(imp_sb.fit_transform(cols_sb), columns=cols_sb.columns)
-
-data = df_nr.join(df_sb, how='right')
-data.describe(include='all')
-
-#---------------------------------Normalization---------------------------------------------------------------
-
-transf = Normalizer().fit(df_nr)
-df_nr = pd.DataFrame(transf.transform(df_nr, copy=True), columns= df_nr.columns)
-norm_data = df_nr.join(df_sb, how='right')
-norm_data.describe(include='all')
-
-#---------------------------------Variable Dummification--------------------------------------------------------
-"""data = original.sample(frac =.25)
-
-def dummify(df, cols_to_dummify):
-    one_hot_encoder = OneHotEncoder(sparse=False)
-
-    for var in cols_to_dummify:
-        one_hot_encoder.fit(data[var].values.reshape(-1, 1))
-        feature_names = one_hot_encoder.get_feature_names([var])
-        transformed_data = one_hot_encoder.transform(data[var].values.reshape(-1, 1))
-        df = pd.concat((df, pd.DataFrame(transformed_data, columns=feature_names)), 1)
-        df.pop(var)
-    return df
-
-
-df = dummify(data, cols_sb.columns)
-df.describe(include='all')
-"""
-#So encontro erros não sei o porque
+#----------------------------------------------Naive Bayes---------------------------------------------------------
