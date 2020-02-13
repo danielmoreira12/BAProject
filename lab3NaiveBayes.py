@@ -55,8 +55,9 @@ cnf_mtx = metrics.confusion_matrix(tstY, prdY, labels)
 plot_confusion_matrix(plt.gca(), cnf_mtx, labels)
 
 estimators = {'GaussianNB': GaussianNB(),
-              'MultinomialNB': MultinomialNB(),
               'BernoulyNB': BernoulliNB()}
+
+#'MultinomialNB': MultinomialNB(),
 
 xvalues = []
 yvalues = []

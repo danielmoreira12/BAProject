@@ -38,6 +38,7 @@ data = data.astype({"Wilderness_Area 1": 'category', 'Wilderness_Area 2': 'categ
                     'Soil_Type 33': 'category', 'Soil_Type 34': 'category', 'Soil_Type 35': 'category',
                     'Soil_Type 36': 'category', 'Soil_Type 37': 'category', 'Soil_Type 38': 'category',
                     'Soil_Type 39': 'category', 'Soil_Type 40': 'category'})
+data = data.sample(frac =.10)
 
 #----------------------------------------------KNN---------------------------------------------------
 y: np.ndarray = data.pop('Cover_Type').values
@@ -46,7 +47,7 @@ labels = pd.unique(y)
 
 trnX, tstX, trnY, tstY = train_test_split(X, y, train_size=0.7, stratify=y)
 
-nvalues = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19]
+nvalues = [1, 2, 3, 4, 5, 6, 7]
 dist = ['manhattan', 'euclidean', 'chebyshev']
 values = {}
 for d in dist:
@@ -61,3 +62,4 @@ for d in dist:
 plt.figure()
 multiple_line_chart(plt.gca(), nvalues, values, 'KNN variants', 'n', 'accuracy', percentage=True)
 plt.show()
+plt.savefig('KNN_CT')

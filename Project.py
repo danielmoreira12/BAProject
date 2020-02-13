@@ -34,7 +34,6 @@ data = data.astype({"Wilderness_Area 1": 'category', 'Wilderness_Area 2': 'categ
                     'Soil_Type 36': 'category', 'Soil_Type 37': 'category', 'Soil_Type 38': 'category',
                     'Soil_Type 39': 'category', 'Soil_Type 40': 'category'})
 
-
 """fig = plt.figure(figsize=(10,7))
 mv = {}
 for var in data:
@@ -48,7 +47,7 @@ plt.show()"""
 """data.describe(include = 'all')
 data.boxplot()
 plt.show()
-"""
+
 #---------------------HistogramForCategory----------------------------------------------------------------------------------
 columns = data.select_dtypes(include='category').columns
 rows, cols = choose_grid(len(columns))
@@ -105,3 +104,26 @@ for n in range(len(columns)):
     i, j = (i + 1, 0) if (n+1) % cols == 0 else (i, j + 1)
 fig.tight_layout()
 plt.show()
+
+#-------------------------------Sparsity-----------------------------------------------------------------------
+columns = data.select_dtypes(include='number').columns
+rows, cols = len(columns)-1, len(columns)-1
+plt.figure()
+fig, axs = plt.subplots(rows, cols, figsize=(cols*4, rows*4), squeeze=False)
+for i in range(len(columns)):
+    var1 = columns[i]
+    for j in range(i+1, len(columns)):
+        var2 = columns[j]
+        axs[i, j-1].set_title("%s x %s"%(var1,var2))
+        axs[i, j-1].set_xlabel(var1)
+        axs[i, j-1].set_ylabel(var2)
+        axs[i, j-1].scatter(data[var1], data[var2])
+fig.tight_layout()
+plt.savefig('Sparsity.png')
+"""
+#-------------------------------Correlation analysis---------------------------------------------------------------
+fig = plt.figure(figsize=[12, 12])
+corr_mtx = data.corr()
+sns.heatmap(corr_mtx, xticklabels=corr_mtx.columns, yticklabels=corr_mtx.columns, annot=True, cmap='Blues')
+plt.title('Correlation analysis')
+plt.savefig('CorrelationAnalysis.png')

@@ -4,7 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 import sklearn.metrics as metrics
-from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
 
 colnames = ['Elevation', 'Aspect', 'Slope',
                 'Horizontal_Distance_To_Hydrology', 'Vertical_Distance_To_Hydrology',
@@ -47,26 +47,24 @@ labels = pd.unique(y)
 
 trnX, tstX, trnY, tstY = train_test_split(X, y, train_size=0.7, stratify=y)
 
-min_samples_leaf = [.05, .025, .01, .0075, .005, .0025, .001]
+n_estimators = [5, 10, 25, 50, 75, 100, 150, 200, 250, 300]
 max_depths = [5, 10, 25, 50]
-criteria = ['entropy', 'gini']
+max_features = ['sqrt', 'log2']
 
 plt.figure()
-fig, axs = plt.subplots(1, 2, figsize=(16, 4), squeeze=False)
-for k in range(len(criteria)):
-    f = criteria[k]
+fig, axs = plt.subplots(1, 2, figsize=(10, 4), squeeze=False)
+for k in range(len(max_features)):
+    f = max_features[k]
     values = {}
     for d in max_depths:
         yvalues = []
-        for n in min_samples_leaf:
-            tree = DecisionTreeClassifier(min_samples_leaf=n, max_depth=d, criterion=f)
-            tree.fit(trnX, trnY)
-            prdY = tree.predict(tstX)
+        for n in n_estimators:
+            rf = RandomForestClassifier(n_estimators=n, max_depth=d, max_features=f)
+            rf.fit(trnX, trnY)
+            prdY = rf.predict(tstX)
             yvalues.append(metrics.accuracy_score(tstY, prdY))
         values[d] = yvalues
-    multiple_line_chart(axs[0, k], min_samples_leaf, values, 'Decision Trees with %s criteria' % f,
-                             'nr estimators',
+    multiple_line_chart(axs[0, k], n_estimators, values, 'Random Forests with %s features' % f, 'nr estimators',
                              'accuracy', percentage=True)
 
 plt.show()
-plt.savefig('Trees_CT')
