@@ -3,22 +3,8 @@ import pandas as pd
 from imblearn.over_sampling import SMOTE
 from functions import *
 
-colnames = ['Elevation', 'Aspect', 'Slope',
-                'Horizontal_Distance_To_Hydrology', 'Vertical_Distance_To_Hydrology',
-                'Horizontal_Distance_To_Roadways', 'Hillshade_9am', 'Hillshade_Noon',
-                'Hillshade_3pm', 'Horizontal_Distance_To_Fire_Points',
-                'Wilderness_Area 1', 'Wilderness_Area 2', 'Wilderness_Area 3', 'Wilderness_Area 4',
-                'Soil_Type 1', 'Soil_Type 2', 'Soil_Type 3', 'Soil_Type 4', 'Soil_Type 5', 'Soil_Type 6', 'Soil_Type 7',
-                'Soil_Type 8', 'Soil_Type 9', 'Soil_Type 10',
-                'Soil_Type 11', 'Soil_Type 12', 'Soil_Type 13', 'Soil_Type 14', 'Soil_Type 15', 'Soil_Type 16',
-                'Soil_Type 17', 'Soil_Type 18', 'Soil_Type 19', 'Soil_Type 20',
-                'Soil_Type 21', 'Soil_Type 22', 'Soil_Type 23', 'Soil_Type 24', 'Soil_Type 25', 'Soil_Type 26',
-                'Soil_Type 27', 'Soil_Type 28', 'Soil_Type 29', 'Soil_Type 30',
-                'Soil_Type 31', 'Soil_Type 32', 'Soil_Type 33', 'Soil_Type 34', 'Soil_Type 35', 'Soil_Type 36',
-                'Soil_Type 37', 'Soil_Type 38', 'Soil_Type 39', 'Soil_Type 40',
-                'Cover_Type']
 #---------------------------------Data balancing - part1------------------------------------------------------
-unbal = pd.read_csv('covtype.csv', sep=',', decimal='.', names=colnames)
+unbal = pd.read_csv('covertypeTreated.csv', sep=',', decimal='.')
 target_count = unbal['Cover_Type'].value_counts()
 plt.figure()
 plt.title('Cover_Type balance')

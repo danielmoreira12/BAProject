@@ -44,11 +44,11 @@ plt.show()"""
 
 
 
-"""data.describe(include = 'all')
+data.describe(include = 'all')
 data.boxplot()
 plt.show()
 
-#---------------------HistogramForCategory----------------------------------------------------------------------------------
+#---------------------HistogramForCategory---------------------------------------------------------------------------
 columns = data.select_dtypes(include='category').columns
 rows, cols = choose_grid(len(columns))
 plt.figure()
@@ -60,7 +60,7 @@ for n in range(len(columns)):
     i, j = (i + 1, 0) if (n+1) % cols == 0 else (i, j + 1)
 fig.tight_layout()
 plt.show()
-
+""""
 #---------------------BoxplotIndividual----------------------------------------------------------------------------
 columns = data.select_dtypes(include='number').columns
 rows, cols = choose_grid(len(columns))
@@ -126,4 +126,5 @@ fig = plt.figure(figsize=[12, 12])
 corr_mtx = data.corr()
 sns.heatmap(corr_mtx, xticklabels=corr_mtx.columns, yticklabels=corr_mtx.columns, annot=True, cmap='Blues')
 plt.title('Correlation analysis')
+plt.show()
 plt.savefig('CorrelationAnalysis.png')

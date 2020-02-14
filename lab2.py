@@ -42,6 +42,8 @@ original = original.astype({"Wilderness_Area 1": 'category', 'Wilderness_Area 2'
                     'Soil_Type 36': 'category', 'Soil_Type 37': 'category', 'Soil_Type 38': 'category',
                     'Soil_Type 39': 'category', 'Soil_Type 40': 'category'})
 
+#original = original.sample(frac =.1)
+
 sb_vars = original.select_dtypes(include='object')
 original[sb_vars.columns] = original.select_dtypes(['object']).apply(lambda x: x.astype('category'))
 
@@ -55,8 +57,8 @@ original.describe(include='all')
 imp = SimpleImputer(strategy='constant', fill_value='NA', missing_values=np.nan, copy=True)
 imp.fit(original.values)
 mat = imp.transform(original.values)
-data = pd.DataFrame(mat, columns=original.columns)
-data.describe(include='all')
+original = pd.DataFrame(mat, columns=original.columns)
+original.describe(include='all')
 
 #---------------------------------Missing Value Imputation - Parte 2------------------------------------------
 imp_nr = SimpleImputer(strategy='mean', missing_values=np.nan, copy=True)
@@ -64,8 +66,8 @@ imp_sb = SimpleImputer(strategy='most_frequent', missing_values='', copy=True)
 df_nr = pd.DataFrame(imp_nr.fit_transform(cols_nr), columns=cols_nr.columns)
 df_sb = pd.DataFrame(imp_sb.fit_transform(cols_sb), columns=cols_sb.columns)
 
-data = df_nr.join(df_sb, how='right')
-data.describe(include='all')
+original = df_nr.join(df_sb, how='right')
+original.describe(include='all')
 
 #---------------------------------Normalization---------------------------------------------------------------
 
@@ -74,6 +76,7 @@ df_nr = pd.DataFrame(transf.transform(df_nr, copy=True), columns= df_nr.columns)
 norm_data = df_nr.join(df_sb, how='right')
 norm_data.describe(include='all')
 
+original = original.to_csv('covertypeTreated.csv')
 #---------------------------------Variable Dummification--------------------------------------------------------
 """data = original.sample(frac =.25)
 
