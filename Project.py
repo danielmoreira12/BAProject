@@ -2,9 +2,9 @@ from functions import *
 import seaborn as sns
 
 colnames = ['Elevation', 'Aspect', 'Slope',
-                'Horizontal_Distance_To_Hydrology', 'Vertical_Distance_To_Hydrology',
-                'Horizontal_Distance_To_Roadways', 'Hillshade_9am', 'Hillshade_Noon',
-                'Hillshade_3pm', 'Horizontal_Distance_To_Fire_Points',
+                'HorDistToHydrology', 'VerDistToHydrology',
+                'HorDistToRoadways', 'Hillshade_9am', 'Hillshade_Noon',
+                'Hillshade_3pm', 'HorDistToFirePoints',
                 'Wilderness_Area 1', 'Wilderness_Area 2', 'Wilderness_Area 3', 'Wilderness_Area 4',
                 'Soil_Type 1', 'Soil_Type 2', 'Soil_Type 3', 'Soil_Type 4', 'Soil_Type 5', 'Soil_Type 6', 'Soil_Type 7',
                 'Soil_Type 8', 'Soil_Type 9', 'Soil_Type 10',
@@ -34,19 +34,14 @@ data = data.astype({"Wilderness_Area 1": 'category', 'Wilderness_Area 2': 'categ
                     'Soil_Type 36': 'category', 'Soil_Type 37': 'category', 'Soil_Type 38': 'category',
                     'Soil_Type 39': 'category', 'Soil_Type 40': 'category'})
 
-"""fig = plt.figure(figsize=(10,7))
+
+fig = plt.figure(figsize=(10,7))
 mv = {}
 for var in data:
     mv[var] = data[var].isna().sum()
     bar_chart(plt.gca(), mv.keys(), mv.values(), 'Number of missing values per variable', var, 'nr. missing values')
 fig.tight_layout()
-plt.show()"""
-
-
-
-data.describe(include = 'all')
-data.boxplot()
-plt.show()
+plt.savefig("MissingValues.png")
 
 #---------------------HistogramForCategory---------------------------------------------------------------------------
 columns = data.select_dtypes(include='category').columns
@@ -59,8 +54,8 @@ for n in range(len(columns)):
     bar_chart(axs[i, j], counts.index, counts.values, 'Histogram for %s'%columns[n], columns[n], 'presence')
     i, j = (i + 1, 0) if (n+1) % cols == 0 else (i, j + 1)
 fig.tight_layout()
-plt.show()
-""""
+plt.savefig("HistogramCategory.png")
+
 #---------------------BoxplotIndividual----------------------------------------------------------------------------
 columns = data.select_dtypes(include='number').columns
 rows, cols = choose_grid(len(columns))
@@ -73,7 +68,7 @@ for n in range(len(columns)):
     axs[i, j].boxplot(data[columns[n]].dropna().values)
     i, j = (i + 1, 0) if (n+1) % cols == 0 else (i, j + 1)
 fig.tight_layout()
-plt.show()
+plt.savefig("BoxplotIndividual.png")
 
 #---------------------Histogram----------------------------------------------------------------------------------
 columns = data.select_dtypes(include='number').columns
@@ -85,11 +80,11 @@ i, j = 0, 0
 for n in range(len(columns)):
     axs[i, j].set_title('Histogram for %s'%columns[n])
     axs[i, j].set_xlabel(columns[n])
-    axs[i, j].set_ylabel("0 to 255 index")
+    #axs[i, j].set_ylabel("0 to 255 index")
     axs[i, j].hist(data[columns[n]].dropna().values, 'auto')
     i, j = (i + 1, 0) if (n+1) % cols == 0 else (i, j + 1)
 fig.tight_layout()
-plt.show()
+plt.savefig("HistogramNumber.png")
 
 #---------------------HistogramTrends-----------------------------------------------------------------------------
 columns = data.select_dtypes(include='number').columns
@@ -99,11 +94,11 @@ fig, axs = plt.subplots(rows, cols, figsize=(cols*4, rows*4), squeeze=False)
 i, j = 0, 0
 for n in range(len(columns)):
     axs[i, j].set_title('Histogram with trend for %s'%columns[n])
-    axs[i, j].set_ylabel("probability")
+    #axs[i, j].set_ylabel("probability")
     sns.distplot(data[columns[n]].dropna().values, norm_hist=True, ax=axs[i, j], axlabel=columns[n])
     i, j = (i + 1, 0) if (n+1) % cols == 0 else (i, j + 1)
 fig.tight_layout()
-plt.show()
+plt.savefig("HistogramTrends.png")
 
 #-------------------------------Sparsity-----------------------------------------------------------------------
 columns = data.select_dtypes(include='number').columns
@@ -120,11 +115,11 @@ for i in range(len(columns)):
         axs[i, j-1].scatter(data[var1], data[var2])
 fig.tight_layout()
 plt.savefig('Sparsity.png')
-"""
+
 #-------------------------------Correlation analysis---------------------------------------------------------------
-fig = plt.figure(figsize=[12, 12])
+fig = plt.figure(figsize=[14, 14])
 corr_mtx = data.corr()
 sns.heatmap(corr_mtx, xticklabels=corr_mtx.columns, yticklabels=corr_mtx.columns, annot=True, cmap='Blues')
 plt.title('Correlation analysis')
-plt.show()
 plt.savefig('CorrelationAnalysis.png')
+
