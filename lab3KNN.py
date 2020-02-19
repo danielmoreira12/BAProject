@@ -39,8 +39,7 @@ data = data.astype({"Wilderness_Area 1": 'category', 'Wilderness_Area 2': 'categ
                     'Soil_Type 36': 'category', 'Soil_Type 37': 'category', 'Soil_Type 38': 'category',
                     'Soil_Type 39': 'category', 'Soil_Type 40': 'category'})
 
-data = data.sample(frac=0.25)
-
+#data = data.sample(frac=0.25)
 
 #----------------------------------------------KNN---------------------------------------------------
 y: np.ndarray = data.pop('Cover_Type').values
@@ -63,5 +62,5 @@ for d in dist:
     values[d] = yvalues
 
 plt.figure(figsize=[14, 14])
-multiple_line_chart(plt.gca(), nvalues, values, 'KNN variants', 'n', 'accuracy', percentage=True)
+multiple_line_chart(plt.gca(), nvalues, values, 'KNN variants', 'n', 'accuracy', percentage=False)
 plt.show()

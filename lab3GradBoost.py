@@ -6,8 +6,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 import sklearn.metrics as metrics
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.tree import export_graphviz
+from sklearn.ensemble import GradientBoostingClassifier
 
 colnames = ['Elevation', 'Aspect', 'Slope',
                 'HorDistToHydrology', 'VerDistToHydrology',
@@ -42,61 +41,43 @@ data = data.astype({"Wilderness_Area 1": 'category', 'Wilderness_Area 2': 'categ
                     'Soil_Type 36': 'category', 'Soil_Type 37': 'category', 'Soil_Type 38': 'category',
                     'Soil_Type 39': 'category', 'Soil_Type 40': 'category'})
 
-#----------------------------------------------Decision Trees---------------------------------------------------
+data = data.sample(frac=0.05)
+
+#----------------------------------------------Grandient Boosting--------------------------------------------
 y: np.ndarray = data.pop('Cover_Type').values
 X: np.ndarray = data.values
 labels = pd.unique(y)
 
 trnX, tstX, trnY, tstY = train_test_split(X, y, train_size=0.7, stratify=y)
 
-min_samples_leaf = [.01, .0075, .005, .0025, .001]
-max_depths = [5, 10, 25, 50]
-criteria = ['entropy', 'gini']
+estimators = [5, 50, 100, 150, 200, 300]
+l_rate = [0.01, 0.1]
+max_depth = [1, 2, 3, 4, 5]
 
-plt.figure()
-fig, axs = plt.subplots(1, 2, figsize=(16, 4), squeeze=False)
-for k in range(len(criteria)):
-    f = criteria[k]
+yvalues = []
+for l in range(len(l_rate)):
     values = {}
-    for d in max_depths:
+    for d in range(len(max_depth)):
         yvalues = []
-        for n in min_samples_leaf:
-            tree = DecisionTreeClassifier(min_samples_leaf=n, max_depth=d, criterion=f)
-            tree.fit(trnX, trnY)
-            prdY = tree.predict(tstX)
+        for e in range(len(estimators)):
+            gbc = GradientBoostingClassifier(n_estimators=estimators[e], learning_rate=l_rate[l],
+                                             max_depth=max_depth[d])
+            gbc.fit(trnX, trnY)
+            gbc.score(tstX, tstY)
+            prdY = gbc.predict(tstX)
+
             yvalues.append(metrics.accuracy_score(tstY, prdY))
-        values[d] = yvalues
-    multiple_line_chart(axs[0, k], min_samples_leaf, values, 'Decision Trees with %s criteria' % f,
-                             'nr estimators',
-                             'accuracy', percentage=True)
+            print('l_rate: ', l, ' max_depth ', d, ' estimators ', e, ' accuracy: ',
+                  str(metrics.accuracy_score(tstY, prdY)))
 
 plt.show()
 
-tree = DecisionTreeClassifier(max_depth=3)
-tree.fit(trnX, trnY)
-
-dot_data = export_graphviz(tree, out_file='dtree.dot', filled=True, rounded=True, special_characters=True)
-print('step 2')
-
-# Convert to png
-print('step 3')
-plt.figure(figsize=(14, 18))
-plt.axis('off')
-
-import pydot
-
-(graph,) = pydot.graph_from_dot_file('dtree.dot')
-graph.write_png('decision_tree_schema_raw_data.png')
-
-plt.show()
-
-clf = GaussianNB()
+"""clf = GaussianNB()
 clf.fit(trnX, trnY)
 prdY = clf.predict(tstX)
-
 plt.figure()
 fig, axs = plt.subplots(1, 2, figsize=(8, 4), squeeze=False)
-plot_confusion_matrix(axs[0,0], metrics.confusion_matrix(tstY, prdY, labels), labels)
-plot_confusion_matrix(axs[0,1], metrics.confusion_matrix(tstY, prdY, labels), labels, normalize=True)
+plot_confusion_matrix(axs[0, 0], metrics.confusion_matrix(tstY, prdY, labels), labels)
+plot_confusion_matrix(axs[0, 1], metrics.confusion_matrix(tstY, prdY, labels), labels, normalize=True)
 plt.tight_layout()
-plt.show()
+plt.show()"""

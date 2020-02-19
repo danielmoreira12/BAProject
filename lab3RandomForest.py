@@ -1,3 +1,5 @@
+from sklearn.naive_bayes import GaussianNB
+
 from functions import *
 import numpy as np
 import pandas as pd
@@ -39,8 +41,9 @@ data = data.astype({"Wilderness_Area 1": 'category', 'Wilderness_Area 2': 'categ
                     'Soil_Type 36': 'category', 'Soil_Type 37': 'category', 'Soil_Type 38': 'category',
                     'Soil_Type 39': 'category', 'Soil_Type 40': 'category'})
 
+data = data.sample(frac=0.25)
 
-#----------------------------------------------Decision Trees---------------------------------------------------
+#----------------------------------------------Random Forest------------------------------------------------
 y: np.ndarray = data.pop('Cover_Type').values
 X: np.ndarray = data.values
 labels = pd.unique(y)
@@ -65,6 +68,17 @@ for k in range(len(max_features)):
             yvalues.append(metrics.accuracy_score(tstY, prdY))
         values[d] = yvalues
     multiple_line_chart(axs[0, k], n_estimators, values, 'Random Forests with %s features' % f, 'nr estimators',
-                             'accuracy', percentage=True)
+                             'accuracy', percentage=False)
 
-plt.savefig('Random Forest Untreated.png')
+plt.show()
+
+"""clf = GaussianNB()
+clf.fit(trnX, trnY)
+prdY = clf.predict(tstX)
+
+plt.figure()
+fig, axs = plt.subplots(1, 2, figsize=(8, 4), squeeze=False)
+plot_confusion_matrix(axs[0,0], metrics.confusion_matrix(tstY, prdY, labels), labels)
+plot_confusion_matrix(axs[0,1], metrics.confusion_matrix(tstY, prdY, labels), labels, normalize=True)
+plt.tight_layout()
+plt.show()"""
