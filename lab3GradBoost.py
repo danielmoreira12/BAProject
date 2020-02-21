@@ -41,8 +41,7 @@ data = data.astype({"Wilderness_Area 1": 'category', 'Wilderness_Area 2': 'categ
                     'Soil_Type 36': 'category', 'Soil_Type 37': 'category', 'Soil_Type 38': 'category',
                     'Soil_Type 39': 'category', 'Soil_Type 40': 'category'})
 
-data = data.sample(frac=0.05)
-
+data = data.sample(frac=0.1)
 #----------------------------------------------Grandient Boosting--------------------------------------------
 y: np.ndarray = data.pop('Cover_Type').values
 X: np.ndarray = data.values
