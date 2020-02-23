@@ -2,7 +2,7 @@ from scipy.stats import stats
 
 from functions import *
 
-original = pd.read_csv('covertypeMinNormalized.csv')
+original = pd.read_csv('covertype1.csv')
 original = original.astype({"Wilderness_Area 1": 'category', 'Wilderness_Area 2': 'category',
                     'Wilderness_Area 3': 'category', 'Wilderness_Area 4': 'category',
                     'Soil_Type 1': 'category', 'Soil_Type 2': 'category', 'Soil_Type 3': 'category',
@@ -24,16 +24,16 @@ original = original.astype({"Wilderness_Area 1": 'category', 'Wilderness_Area 2'
 import pandas as pd
 import numpy as np
 
-from pandas.api.types import is_numeric_dtype
+columns = original.select_dtypes(include='number').columns
 
-def remove_outlier(df):
-    low = .05
-    high = .95
-    quant_df = df.quantile([low, high])
-    for name in list(df.columns):
-        if is_numeric_dtype(df[name]):
-            df = df[(df[name] > quant_df.loc[low, name]) & (df[name] < quant_df.loc[high, name])]
-    return df
+for name in columns:
+    Q1 = original[name].quantile(0.25)
+    Q3 = original[name].quantile(0.75)
+    IQR = Q3 - Q1
+    low = Q1 -1.5*IQR
+    higher = Q3+1.5*IQR
+    med = original[name].median()
+    original[name] = np.where(original[name] > higher, med, original[name])
+    original[name] = np.where(original[name] < low, med, original[name])
 
-df=remove_outlier(original)
-df.to_csv('covertypeNoOutliers.csv',index=False,index_label=False)
+original.to_csv('covertype.csv',index=False,index_label=False)

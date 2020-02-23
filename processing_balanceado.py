@@ -1,6 +1,3 @@
-import matplotlib.pyplot as plt
-import pandas as pd
-from imblearn.over_sampling import SMOTE
 from functions import *
 
 colnames = ['Elevation', 'Aspect', 'Slope',
@@ -17,8 +14,8 @@ colnames = ['Elevation', 'Aspect', 'Slope',
                 'Soil_Type 31', 'Soil_Type 32', 'Soil_Type 33', 'Soil_Type 34', 'Soil_Type 35', 'Soil_Type 36',
                 'Soil_Type 37', 'Soil_Type 38', 'Soil_Type 39', 'Soil_Type 40',
                 'Cover_Type']
-unbal = pd.read_csv('covtype.csv', names=colnames, sep=',', decimal='.')
-unbal = unbal.astype({"Wilderness_Area 1": 'category', 'Wilderness_Area 2': 'category',
+data = pd.read_csv('covtype.csv', names=colnames)
+data = data.astype({"Wilderness_Area 1": 'category', 'Wilderness_Area 2': 'category',
                     'Wilderness_Area 3': 'category', 'Wilderness_Area 4': 'category',
                     'Soil_Type 1': 'category', 'Soil_Type 2': 'category', 'Soil_Type 3': 'category',
                     'Soil_Type 4': 'category', 'Soil_Type 5': 'category', 'Soil_Type 6': 'category',
@@ -35,46 +32,34 @@ unbal = unbal.astype({"Wilderness_Area 1": 'category', 'Wilderness_Area 2': 'cat
                     'Soil_Type 33': 'category', 'Soil_Type 34': 'category', 'Soil_Type 35': 'category',
                     'Soil_Type 36': 'category', 'Soil_Type 37': 'category', 'Soil_Type 38': 'category',
                     'Soil_Type 39': 'category', 'Soil_Type 40': 'category'})
-unbal = unbal.sample(frac=0.50)
-#---------------------------------Data balancing - part1------------------------------------------------------
-target_count = unbal['Cover_Type'].value_counts()
-plt.figure()
-plt.title('Cover_Type balance')
-plt.bar(target_count.index, target_count.values)
-plt.show()
 
+category = 'Cover_Type'
+target_count = data[category].value_counts()
+print(target_count)
 min_class = target_count.idxmin()
-ind_min_class = target_count.index.get_loc(min_class)
+print('Minority class:', target_count[min_class])
+df_class_min = data[data[category] == min_class]
 
-print('Minority class:', target_count[ind_min_class], min_class)
-print('Majority class:', target_count[7-ind_min_class])
-print('Percentage Minority class:', target_count[ind_min_class]/len(unbal))
-print('Percentage Majority class:', target_count[7-ind_min_class]/len(unbal))
-print('Proportion:', round(target_count[ind_min_class] / target_count[7-ind_min_class], 7), ': 1')
-"""
-#---------------------------------Data balancing - part2-------------------------------------------------------
-RANDOM_STATE = 42
-unbal = unbal.sample(frac=.25)
-values = {'Original': [target_count.values[ind_min_class], target_count.values[7-ind_min_class]]}
+c1 = data.loc[data['Cover_Type'] == 1]
+c2 = data.loc[data['Cover_Type'] == 2]
+c3 = data.loc[data['Cover_Type'] == 3]
+c4 = data.loc[data['Cover_Type'] == 4]
+c5 = data.loc[data['Cover_Type'] == 5]
+c6 = data.loc[data['Cover_Type'] == 6]
+c7 = data.loc[data['Cover_Type'] == 7]
 
-df_class_min = unbal[unbal['Cover_Type'] == min_class]
-df_class_max = unbal[unbal['Cover_Type'] != min_class]
+c1 = c1.sample(len(df_class_min))
+c2 = c2.sample(len(df_class_min))
+c3 = c3.sample(len(df_class_min))
+c5 = c5.sample(len(df_class_min))
+c6 = c6.sample(len(df_class_min))
+c7 = c7.sample(len(df_class_min))
 
-df_under = df_class_max.sample(len(df_class_min))
-values['UnderSample'] = [target_count.values[ind_min_class], len(df_under)]
+frames = [c2, c3, c4, c5, c6, c7]
+data_balanced = c1.append(frames)
 
-df_over = df_class_min.sample(len(df_class_max), replace=True)
-values['OverSample'] = [len(df_over), target_count.values[7-ind_min_class]]
+print(data_balanced.shape)
 
-smote = SMOTE(random_state=RANDOM_STATE)
-y = unbal.pop('Cover_Type').values
-X = unbal.values
-_, smote_y = smote.fit_sample(X, y)
-smote_target_count = pd.Series(smote_y).value_counts()
-values['SMOTE'] = [smote_target_count.values[ind_min_class], smote_target_count.values[7-ind_min_class]]
+print(data_balanced)
 
-plt.figure()
-multiple_bar_chart(plt.gca(),
-                        [target_count.index[ind_min_class], target_count.index[7-ind_min_class]],
-                        values, 'Target', 'frequency', 'Class balance')
-plt.show()"""
+data_balanced.to_csv('covertypeBalanced.csv', index=False, index_label=False)

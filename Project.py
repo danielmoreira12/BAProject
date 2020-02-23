@@ -32,7 +32,7 @@ data = data.astype({"Wilderness_Area 1": 'category', 'Wilderness_Area 2': 'categ
                     'Soil_Type 30': 'category', 'Soil_Type 31': 'category', 'Soil_Type 32': 'category',
                     'Soil_Type 33': 'category', 'Soil_Type 34': 'category', 'Soil_Type 35': 'category',
                     'Soil_Type 36': 'category', 'Soil_Type 37': 'category', 'Soil_Type 38': 'category',
-                    'Soil_Type 39': 'category', 'Soil_Type 40': 'category'})
+                    'Soil_Type 39': 'category', 'Soil_Type 40': 'category', 'Cover_Type': 'category'})
 
 
 fig = plt.figure(figsize=(10,7))

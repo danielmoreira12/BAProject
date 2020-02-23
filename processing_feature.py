@@ -27,7 +27,7 @@ feature_names = list(original.columns.values)
 y_clf=original.pop('Cover_Type').values
 X_clf=original.values
 
-selector=SelectKBest(score_func=chi2,k=25)
+selector=SelectKBest(score_func=chi2,k=30)
 features_df = selector.fit_transform(X_clf,y_clf)
 # Get columns to keep and create new dataframe with those only
 mask = selector.get_support() #list of booleans
@@ -40,6 +40,3 @@ for bool, feature in zip(mask, feature_names):
 dataframe = pd.DataFrame(features_df, columns=new_features)
 dataframe['Cover_Type'] = y_clf
 dataframe.to_csv('covertypeFeature.csv',index=False,index_label=False)
-
-
-
