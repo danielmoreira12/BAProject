@@ -2,7 +2,7 @@ from scipy.stats import stats
 
 from functions import *
 
-original = pd.read_csv('covertype1.csv')
+original = pd.read_csv('covertypeMinNormalized.csv')
 original = original.astype({"Wilderness_Area 1": 'category', 'Wilderness_Area 2': 'category',
                     'Wilderness_Area 3': 'category', 'Wilderness_Area 4': 'category',
                     'Soil_Type 1': 'category', 'Soil_Type 2': 'category', 'Soil_Type 3': 'category',
@@ -36,4 +36,4 @@ for name in columns:
     original[name] = np.where(original[name] > higher, med, original[name])
     original[name] = np.where(original[name] < low, med, original[name])
 
-original.to_csv('covertype.csv',index=False,index_label=False)
+original.to_csv('covertypeRepOutliers.csv',index=False,index_label=False)

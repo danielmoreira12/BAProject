@@ -7,7 +7,7 @@ from sklearn.model_selection import train_test_split
 import sklearn.metrics as metrics
 from sklearn.naive_bayes import GaussianNB, MultinomialNB, BernoulliNB
 
-data = pd.read_csv('covertypeMinNormalized.csv')
+data = pd.read_csv('covertypeRepOutliers.csv')
 
 #----------------------------------------------Training strategy---------------------------------------------------
 y: np.ndarray = data.pop('Cover_Type').values
@@ -48,7 +48,7 @@ print('Sensibility: ', xvaluesS, yvaluesS)
 print('Accuracy: ', xvalues, yvalues,)
 
 plt.figure()
-bar_chart(plt.gca(), xvaluesS, yvaluesS, 'Comparison of Naive Bayes Models', '', 'sensitivity', percentage=True)
+bar_chart(plt.gca(), xvaluesS, yvaluesS, 'Comparison of Naive Bayes Models', '', 'sensibility', percentage=True)
 plt.show()
 
 plt.figure()

@@ -9,7 +9,7 @@ import sklearn.metrics as metrics
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.tree import export_graphviz
 
-data = pd.read_csv('covertypeBalanced.csv')
+data = pd.read_csv('covertypeFeature.csv')
 
 #----------------------------------------------Decision Trees---------------------------------------------------
 y: np.ndarray = data.pop('Cover_Type').values
@@ -53,12 +53,12 @@ for k in range(len(criteria)):
             tree = DecisionTreeClassifier(min_samples_leaf=n, max_depth=d, criterion=f)
             tree.fit(trnX, trnY)
             prdY = tree.predict(tstX)
-            yvalues.append(metrics.recall_score(tstY, prdY,average='macro'))
+            yvalues.append(metrics.recall_score(tstY, prdY, average='macro'))
         values[d] = yvalues
-        print("Max Depth: ", d, "Sensitivity: ", yvalues)
+        print("Max Depth: ", d, "Sensibility: ", yvalues)
     multiple_line_chart(axs[0, k], min_samples_leaf, values, 'Decision Trees with %s criteria' % f,
                              'nr estimators',
-                             'Sensitivity', percentage=False)
+                             'sensibility', percentage=False)
 
 plt.show()
 """
