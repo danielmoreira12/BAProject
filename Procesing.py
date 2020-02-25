@@ -3,7 +3,7 @@ from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
 from functions import *
-original = pd.read_csv('covertypeBalanced.csv')
+original = pd.read_csv('covertype1.csv')
 original = original.astype({"Wilderness_Area 1": 'category', 'Wilderness_Area 2': 'category',
                     'Wilderness_Area 3': 'category', 'Wilderness_Area 4': 'category',
                     'Soil_Type 1': 'category', 'Soil_Type 2': 'category', 'Soil_Type 3': 'category',

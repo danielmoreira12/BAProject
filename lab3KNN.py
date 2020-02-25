@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split
 import sklearn.metrics as metrics
 from sklearn.neighbors import KNeighborsClassifier
 
-data = pd.read_csv('covertypeFeature.csv')
+data = pd.read_csv('Balanced_Data_SMOTE.csv')
 
 #----------------------------------------------KNN---------------------------------------------------
 y: np.ndarray = data.pop('Cover_Type').values
@@ -28,7 +28,7 @@ for d in dist:
         prdY = knn.predict(tstX)
         yvalues.append(metrics.accuracy_score(tstY, prdY))
     values[d] = yvalues
-    print("Distance: ", d, "accuracy: ", yvalues)
+    print("Distance: ", d, "Accuracy: ", yvalues)
 
 for d in dist:
     yvalues = []
@@ -38,12 +38,12 @@ for d in dist:
         prdY = knn.predict(tstX)
         yvalues.append(metrics.recall_score(tstY, prdY, average='macro'))
     valuesS[d] = yvalues
-    print("Distance: ", d, "Sensitivity: ", yvalues)
+    print("Distance: ", d, "Sensibility: ", yvalues)
 
 plt.figure(figsize=[14, 14])
 multiple_line_chart(plt.gca(), nvalues, values, 'KNN variants', 'n', 'accuracy', percentage=True)
 plt.show()
 
 plt.figure(figsize=[14, 14])
-multiple_line_chart(plt.gca(), nvalues, valuesS, 'KNN variants', 'n', 'sensitivity', percentage=False)
+multiple_line_chart(plt.gca(), nvalues, valuesS, 'KNN variants', 'n', 'sensibility', percentage=False)
 plt.show()

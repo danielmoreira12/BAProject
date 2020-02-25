@@ -7,7 +7,7 @@ from sklearn.model_selection import train_test_split
 import sklearn.metrics as metrics
 from sklearn.naive_bayes import GaussianNB, MultinomialNB, BernoulliNB
 
-data = pd.read_csv('covertypeRepOutliers.csv')
+data = pd.read_csv('Balanced_Data_SMOTE.csv')
 
 #----------------------------------------------Training strategy---------------------------------------------------
 y: np.ndarray = data.pop('Cover_Type').values

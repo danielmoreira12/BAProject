@@ -9,7 +9,7 @@ import sklearn.metrics as metrics
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.tree import export_graphviz
 
-data = pd.read_csv('covertypeFeature.csv')
+data = pd.read_csv('Balanced_Data_SMOTE.csv')
 
 #----------------------------------------------Decision Trees---------------------------------------------------
 y: np.ndarray = data.pop('Cover_Type').values

@@ -35,7 +35,11 @@ data = data.astype({"Wilderness_Area 1": 'category', 'Wilderness_Area 2': 'categ
                     'Soil_Type 39': 'category', 'Soil_Type 40': 'category', 'Cover_Type': 'category'})
 
 
-fig = plt.figure(figsize=(10,7))
+print(data.shape)
+distr = data.describe()
+distr.to_csv('dataDescription.csv',index=False,index_label=False)
+
+"""fig = plt.figure(figsize=(10,7))
 mv = {}
 for var in data:
     mv[var] = data[var].isna().sum()
@@ -122,4 +126,4 @@ corr_mtx = data.corr()
 sns.heatmap(corr_mtx, xticklabels=corr_mtx.columns, yticklabels=corr_mtx.columns, annot=True, cmap='Blues')
 plt.title('Correlation analysis')
 plt.savefig('CorrelationAnalysis.png')
-
+"""

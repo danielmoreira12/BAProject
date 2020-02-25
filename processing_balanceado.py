@@ -60,12 +60,4 @@ data_balanced = c1.append(frames)
 
 print(data_balanced.shape)
 
-print(data_balanced)
-category = 'Cover_Type'
-target_count = data_balanced[category].value_counts()
-print(target_count)
-min_class = target_count.idxmin()
-print('Minority class:', target_count[min_class])
-df_class_min = data_balanced[data_balanced[category] == min_class]
-
 data_balanced.to_csv('covertypeBalanced.csv', index=False, index_label=False)
